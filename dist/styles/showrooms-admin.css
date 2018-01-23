@@ -1,0 +1,24 @@
+#edittag {
+  width: 100%;
+  max-width: unset;
+}
+
+#addtag .acf-field-showroom-window {
+  display: none;
+}
+
+.acf-field-showroom-window table {
+  table-layout: fixed;
+}
+
+.acf-field-showroom-window table th[data-key^="field_showroom_image"] {
+  width: 130px !important;
+}
+
+.acf-field-showroom-window .acf-label {
+  display: none;
+}
+
+.form-table tbody .acf-field.acf-field-showroom-window .acf-input {
+  padding: 0;
+}

@@ -1,0 +1,32 @@
+#edittag {
+  width: 100%;
+  max-width: unset;
+}
+
+#addtag {
+  .acf-field-showroom-window {
+    display: none;
+  }
+}
+
+.acf-field-showroom-window {
+  table {
+    table-layout: fixed;
+
+    th[data-key^="field_showroom_image"] {
+      // Using !important to override advanced-custom-field plugin inline styling.
+      width: 130px !important;
+    }
+  }
+
+  .acf-label {
+    display: none;
+  }
+}
+
+// Using higher specificity to override advanced-custom-field plugin styling.
+.form-table tbody .acf-field.acf-field-showroom-window {
+  .acf-input {
+    padding: 0;
+  }
+}
