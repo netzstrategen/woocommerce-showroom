@@ -42,6 +42,9 @@ class Plugin {
     if (is_admin()) {
       add_action('admin_enqueue_scripts', __CLASS__ . '::admin_enqueue_scripts');
     }
+    else {
+      add_action('wp_enqueue_scripts', __CLASS__ . '::wp_enqueue_scripts');
+    }
 
     add_action('woocommerce_before_shop_loop', __CLASS__ . '::woocommerce_before_shop_loop');
   }
@@ -130,6 +133,28 @@ class Plugin {
   }
 
   /**
+   * @implements enqueue_scripts.
+   */
+  public static function wp_enqueue_scripts() {
+    if (!is_product_category()) {
+      return;
+    }
+
+    $query = get_queried_object();
+    if (empty($query->slug)) {
+      return;
+    }
+
+    if ($query->taxonomy !== 'product_cat') {
+      return;
+    }
+
+    if (have_rows('field_showroom_window', 'product_cat_' . $query->term_id)) {
+      wp_enqueue_style('showrooms-css', static::getBaseUrl() . '/dist/styles/showrooms.css');
+    }
+  }
+
+  /**
    * @implements woocommerce_before_shop_loop
    *
    * Adds the Showroom slider to the category view page
@@ -154,6 +179,15 @@ class Plugin {
         'term_id' => $query->term_id,
       ]);
     }
+  }
+
+  /**
+   * Checks if wp-rocket plugin is active and images lazyload option is set.
+   *
+   * @return bool
+   */
+  public static function isLazyLoadActive() {
+    return is_plugin_active('wp-rocket/wp-rocket.php') && get_rocket_option('lazyload');
   }
 
   /**
