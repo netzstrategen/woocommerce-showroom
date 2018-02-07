@@ -43,7 +43,8 @@ class Plugin {
       add_action('admin_enqueue_scripts', __CLASS__ . '::admin_enqueue_scripts');
     }
     else {
-      add_action('wp_enqueue_scripts', __CLASS__ . '::wp_enqueue_scripts');
+      // Loads styles with lower priority to override gallerya plugin styles.
+      add_action('wp_enqueue_scripts', __CLASS__ . '::wp_enqueue_scripts', 99);
     }
 
     add_action('woocommerce_before_shop_loop', __CLASS__ . '::woocommerce_before_shop_loop');
