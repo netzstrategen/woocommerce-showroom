@@ -35,17 +35,14 @@ class Plugin {
    * @implements init
    */
   public static function init() {
-    if (function_exists('register_field_group')) {
-      static::register_acf();
+    if (!function_exists('register_field_group') || !function_exists('is_product_category')) {
+      return;
     }
 
-    if (is_admin()) {
-      add_action('admin_enqueue_scripts', __CLASS__ . '::admin_enqueue_scripts');
-    }
-    else {
-      // Loads styles with lower priority to override gallerya plugin styles.
-      add_action('wp_enqueue_scripts', __CLASS__ . '::wp_enqueue_scripts', 99);
-    }
+    static::register_acf();
+
+    // Loads styles with lower priority to override gallerya plugin styles.
+    add_action('wp_enqueue_scripts', __CLASS__ . '::wp_enqueue_scripts', 99);
 
     add_action('woocommerce_before_shop_loop', __CLASS__ . '::woocommerce_before_shop_loop');
   }
@@ -127,13 +124,6 @@ class Plugin {
   }
 
   /**
-   * @implements admin_enqueue_scripts.
-   */
-  public static function admin_enqueue_scripts() {
-    wp_enqueue_style('showrooms-admin-css', static::getBaseUrl() . '/dist/styles/showrooms-admin.css');
-  }
-
-  /**
    * @implements enqueue_scripts.
    */
   public static function wp_enqueue_scripts() {
@@ -141,17 +131,13 @@ class Plugin {
       return;
     }
 
-    $query = get_queried_object();
-    if (empty($query->slug)) {
+    $term = get_queried_object();
+    if ($term->taxonomy !== 'product_cat') {
       return;
     }
 
-    if ($query->taxonomy !== 'product_cat') {
-      return;
-    }
-
-    if (have_rows('field_showroom_window', 'product_cat_' . $query->term_id)) {
-      wp_enqueue_style('showrooms-css', static::getBaseUrl() . '/dist/styles/showrooms.css');
+    if (have_rows('field_showroom_window', 'product_cat_' . $term->term_id)) {
+      wp_enqueue_style(Plugin::PREFIX, static::getBaseUrl() . '/dist/styles/main.css');
     }
   }
 
@@ -166,18 +152,14 @@ class Plugin {
       return;
     }
 
-    $query = get_queried_object();
-    if (empty($query->slug)) {
+    $term = get_queried_object();
+    if ($term->taxonomy !== 'product_cat') {
       return;
     }
 
-    if ($query->taxonomy !== 'product_cat') {
-      return;
-    }
-
-    if (have_rows('field_showroom_window', 'product_cat_' . $query->term_id)) {
+    if (have_rows('field_showroom_window', $term)) {
       static::renderTemplate(['templates/showroom.php'], [
-        'term_id' => $query->term_id,
+        'term_id' => $term->term_id,
       ]);
     }
   }

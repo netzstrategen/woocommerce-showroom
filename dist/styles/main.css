@@ -9,24 +9,24 @@
 
 .gallerya--slider .gallerya__image {
   width: 60%;
-  margin-left: 0;
   margin-right: 0;
+  margin-left: 0;
   padding-right: 20px;
 }
 
 @media screen and (max-width: 991px) {
   .gallerya--slider .gallerya__image {
     width: 100%;
-    text-align: center;
     padding-right: 0;
+    text-align: center;
   }
 }
 
 .gallerya--slider .gallerya__image figcaption {
   position: static;
+  padding: 10px;
   background: none;
   color: #666;
-  padding: 10px;
 }
 
 .flickity-page-dots {
@@ -34,15 +34,16 @@
 }
 
 .gallerya .flickity-prev-next-button {
-  height: 64px;
+  top: 33%;
   width: 32px;
+  height: 64px;
   border-radius: 0;
   background: #ccc;
 }
 
-@media screen and (max-width: 991px) {
+@media screen and (min-width: 992px) {
   .gallerya .flickity-prev-next-button {
-    top: 33%;
+    top: 50%;
   }
 }
 
@@ -58,43 +59,60 @@
   background-color: #efefef;
 }
 
-.showroom-item {
+.showroom__item {
   display: -ms-flexbox;
   display: flex;
+  -ms-flex-direction: column;
+      flex-direction: column;
 }
 
-@media screen and (max-width: 991px) {
-  .showroom-item {
-    display: block;
+@media screen and (min-width: 992px) {
+  .showroom__item {
+    -ms-flex-direction: row;
+        flex-direction: row;
   }
 }
 
-.showroom-related-products {
-  padding: 20px 0;
+.showroom__related-products {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-direction: row;
+      flex-direction: row;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  padding: 20px;
 }
 
-@media screen and (max-width: 991px) {
-  .showroom-related-products {
-    padding: 20px;
+@media screen and (min-width: 992px) {
+  .showroom__related-products {
+    -ms-flex-direction: column;
+        flex-direction: column;
+    padding: 20px 0;
   }
 }
 
-.showroom-related-product {
+.showroom__related-product {
   display: -ms-flexbox;
   display: flex;
   padding-bottom: 20px;
 }
 
-.showroom-related-product:last-child {
+@media screen and (min-width: 768px) and (max-width: 991px) {
+  .showroom__related-product {
+    width: 50% !important;
+  }
+}
+
+.showroom__related-product:last-child {
   padding-bottom: 0;
 }
 
-.showroom-related-product-image {
+.showroom__related-product-image {
   width: 120px;
   padding-right: 20px;
 }
 
-.showroom-related-product-details {
+.showroom__related-product-details {
   display: -ms-flexbox;
   display: flex;
   -ms-flex-direction: column;
@@ -102,8 +120,8 @@
   line-height: 1.5;
 }
 
-.showroom-related-product-details a {
-  font-weight: bold;
+.showroom__related-product-details a {
   display: block;
   min-width: 100%;
+  font-weight: bold;
 }
