@@ -11,6 +11,7 @@ namespace Netzstrategen\WooCommerceShowroom;
  * Showroom backend functionality.
  */
 class Admin {
+
   /**
    * @implements admin_init
    */
