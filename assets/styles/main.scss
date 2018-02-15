@@ -1,0 +1,89 @@
+@import '_config';
+
+.showroom {
+  clear: both;
+  background-color: $showroom-background-color;
+
+  &__item {
+    @media screen and (min-width: $screen-md-min) {
+      display: flex;
+      flex-direction: row;
+    }
+  }
+
+  .showroom  &__image {
+    margin: 0;
+
+    // @todo `.gallerya--slider figure` limits image width to 75%.
+    @media screen and (max-width: $screen-sm-max) {
+      width: 100%;
+    }
+
+    figcaption {
+      padding: 10px 20px 5px;
+
+      @media screen and (min-width: $screen-md-min) {
+        padding: 0.6em;
+      }
+
+      p {
+        margin: 0;
+        padding: 0;
+      }
+    }
+  }
+
+  &__products {
+    padding: 0 20px;
+
+    @media screen and (min-width: $screen-md-min) {
+      li img {
+        max-width: 20%;
+      }
+    }
+  }
+}
+
+.showroom.gallerya--slider {
+  margin: 0 0 1em;
+
+  // @todo Fix unbound LI selector in gallerya upstream.
+  & > ul li {
+    top: 0;
+    transform: translateY(0%);
+  }
+
+  .js-gallerya-slider {
+    margin: 0;
+  }
+
+  .flickity-prev-next-button {
+    top: 33%;
+    width: 20px;
+    height: 64px;
+    border-radius: 0;
+
+    @media screen and (min-width: $screen-md-min) {
+      top: 50%;
+    }
+
+    &.previous {
+      left: 0;
+    }
+
+    &.next {
+      right: 0;
+    }
+
+    svg {
+      left: 5%;
+      top: 30%;
+      width: 90%;
+      height: 40%;
+    }
+  }
+
+  .flickity-page-dots {
+    display: none;
+  }
+}

@@ -13,7 +13,7 @@ namespace Netzstrategen\WooCommerceShowroom;
 class Plugin {
 
   /**
-   * Prefix for naming.
+   * Namespace prefix.
    *
    * @var string
    */
@@ -35,15 +35,17 @@ class Plugin {
    * @implements init
    */
   public static function init() {
-    if (function_exists('register_field_group')) {
-      static::register_acf();
+    if (!function_exists('acf_add_local_field_group') || !function_exists('is_product_category')) {
+      return;
     }
 
-    if (is_admin()) {
-      add_action('admin_enqueue_scripts', __CLASS__ . '::admin_enqueue_scripts');
-    }
+    static::register_acf();
 
-    add_action('woocommerce_before_shop_loop', __CLASS__ . '::woocommerce_before_shop_loop');
+    // Loads styles with lower priority to override gallerya plugin styles.
+    add_action('wp_enqueue_scripts', __CLASS__ . '::wp_enqueue_scripts', 99);
+
+    // Use higher priority to render at the top before any product filter additions.
+    add_action('woocommerce_before_shop_loop', __CLASS__ . '::woocommerce_before_shop_loop', 5);
   }
 
   /**
@@ -52,17 +54,17 @@ class Plugin {
   public static function register_acf() {
     acf_add_local_field_group([
       'key' => 'group_showroom',
-      'title' => 'Showroom',
+      'title' => 'Showrooms',
       'fields' => [[
-        'key' => 'field_showroom_window',
-        'name' => 'field_showroom_window',
+        'key' => 'woocommerce-showroom_rooms',
+        'name' => 'woocommerce-showroom_rooms',
         'type' => 'repeater',
         'conditional_logic' => 0,
         'layout' => 'table',
         'button_label' => 'Add showroom',
         'sub_fields' => [[
-          'key' => 'field_showroom_image',
-          'name' => 'field_showroom_image',
+          'key' => 'image',
+          'name' => 'image',
           'label' => __('Image', Plugin::L10N),
           'type' => 'image',
           'required' => 1,
@@ -71,8 +73,8 @@ class Plugin {
           'library' => 'all',
         ],
         [
-          'key' => 'field_showroom_description',
-          'name' => 'field_showroom_description',
+          'key' => 'description',
+          'name' => 'description',
           'label' => __('Description', Plugin::L10N),
           'type' => 'wysiwyg',
           'required' => 1,
@@ -83,9 +85,9 @@ class Plugin {
           'delay' => 0,
         ],
         [
-          'key' => 'field_showroom_related_products',
-          'name' => 'field_showroom_related_products',
-          'label' => __('Related products', Plugin::L10N),
+          'key' => 'products',
+          'name' => 'products',
+          'label' => __('Shown products', Plugin::L10N),
           'type' => 'relationship',
           'required' => 0,
           'conditional_logic' => 0,
@@ -123,37 +125,42 @@ class Plugin {
   }
 
   /**
-   * @implements admin_enqueue_scripts.
+   * @implements enqueue_scripts.
    */
-  public static function admin_enqueue_scripts() {
-    wp_enqueue_style('showrooms-admin-css', static::getBaseUrl() . '/dist/styles/showrooms-admin.css');
+  public static function wp_enqueue_scripts() {
+    if (!is_product_category()) {
+      return;
+    }
+    $term = get_queried_object();
+    if (have_rows('woocommerce-showroom_rooms', 'product_cat_' . $term->term_id)) {
+      wp_enqueue_style(Plugin::PREFIX, static::getBaseUrl() . '/dist/styles/main.css');
+    }
   }
 
   /**
-   * @implements woocommerce_before_shop_loop
+   * Outputs showrooms at the top of product category page.
    *
-   * Adds the Showroom slider to the category view page
-   * before the WooCommerce products block.
+   * @implements woocommerce_before_shop_loop
    */
   public static function woocommerce_before_shop_loop() {
     if (!is_product_category()) {
       return;
     }
-
-    $query = get_queried_object();
-    if (empty($query->slug)) {
-      return;
-    }
-
-    if ($query->taxonomy !== 'product_cat') {
-      return;
-    }
-
-    if (have_rows('field_showroom_window', 'product_cat_' . $query->term_id)) {
+    $term = get_queried_object();
+    if (have_rows('woocommerce-showroom_rooms', $term)) {
       static::renderTemplate(['templates/showroom.php'], [
-        'term_id' => $query->term_id,
+        'term' => $term,
       ]);
     }
+  }
+
+  /**
+   * Checks if wp-rocket plugin is active and images lazyload option is enabled.
+   *
+   * @return bool
+   */
+  public static function isLazyLoadActive() {
+    return is_plugin_active('wp-rocket/wp-rocket.php') && get_rocket_option('lazyload');
   }
 
   /**

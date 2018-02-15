@@ -32,4 +32,5 @@ function classloader($class) {
 }
 spl_autoload_register(__NAMESPACE__ . '\classloader');
 
+add_action('admin_init', __NAMESPACE__ . '\Admin::init');
 add_action('init', __NAMESPACE__ . '\Plugin::init');
