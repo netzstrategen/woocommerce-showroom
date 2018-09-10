@@ -107,6 +107,14 @@ class Plugin {
           'max' => 3,
           'return_format' => 'id',
         ]],
+      ],
+      [
+        'key' => 'woocommerce-showroom_shuffle_slides',
+        'name' => 'woocommerce-showroom_shuffle_slides',
+        'label' => __('Suffle slides', Plugin::L10N),
+        'type' => 'true_false',
+        'required' => 0,
+        'default_value' => 0,
       ]],
       'location' => [[
         [
