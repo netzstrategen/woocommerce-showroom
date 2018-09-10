@@ -2,7 +2,7 @@
 
 /*
   Plugin Name: WooCommerce Showroom
-  Version: 1.0.0
+  Version: 1.1.0
   Text Domain: woocommerce-showrooom
   Description: Products category slideshow for WooCommerce.
   Author: netzstrategen

@@ -1,6 +1,6 @@
 {
   "name": "woocommerce-showroom",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Products category slideshow for WooCommerce.",
   "main": "gulpfile.js",
   "author": "netzstrategen <hallo@netzstrategen.com>",
